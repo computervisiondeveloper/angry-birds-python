@@ -317,7 +317,7 @@ space.add_collision_handler(0, 1).post_solve=post_solve_bird_pig
 space.add_collision_handler(0, 2).post_solve=post_solve_bird_wood
 # pig and wood
 space.add_collision_handler(1, 2).post_solve=post_solve_pig_wood
-load_music()
+# load_music()
 level = Level(pigs, columns, beams, space)
 level.number = 0
 level.load_level()
@@ -442,8 +442,8 @@ while running:
         x -= 22
         y -= 20
         screen.blit(redbird, (x, y))
-        pygame.draw.circle(screen, BLUE,
-                           p, int(bird.shape.radius), 2)
+        # pygame.draw.circle(screen, BLUE,
+        #                   p, int(bird.shape.radius), 2)
         if counter >= 3 and time.time() - t1 < 5:
             bird_path.append(p)
             restart_counter = True
@@ -467,12 +467,14 @@ while running:
         pygame.draw.lines(screen, (150, 150, 150), False, [p1, p2])
     i = 0
     # Draw pigs
-    for pig in pigs:
+    for pig_, pig in enumerate(pigs):
         i += 1
         # print (i,pig.life)
-        pig = pig.shape
-        if pig.body.position.y < 0:
+
+        if pig.body.position.y < 0 or pig.body.position.x < 0 or pig.body.position.x > 1200:
             pigs_to_remove.append(pig)
+
+        pig = pig.shape
 
         p = to_pygame(pig.body.position)
         x, y = p
@@ -483,7 +485,11 @@ while running:
         x -= w*0.5
         y -= h*0.5
         screen.blit(img, (x, y))
-        pygame.draw.circle(screen, BLUE, p, int(pig.radius), 2)
+        # pygame.draw.circle(screen, BLUE, p, int(pig.radius), 2)
+
+    for pig in pigs_to_remove:
+        space.remove(pig.shape, pig.shape.body)
+        pigs.remove(pig)
     # Draw columns and Beams
     for column in columns:
         column.draw_poly('columns', screen)
